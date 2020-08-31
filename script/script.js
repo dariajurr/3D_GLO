@@ -24,7 +24,7 @@ window.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateClock() {
-      let timer = getTimeRemaining();
+      const timer = getTimeRemaining();
       timerHours.textContent = timeFormat(timer.hours);
       timerMinutes.textContent = timeFormat(timer.minutes);
       timerSeconds.textContent = timeFormat(timer.seconds);
