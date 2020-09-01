@@ -45,41 +45,15 @@ function countTimer(deadline) {
     До нового года осталось ${timer.days} дней`;
 
 
+
     if (timer.timeRemaining > 0) {
       setTimeout(updateClock, 1000);
     }
-    /*else {
-      timerHours.textContent = timeFormat(0);
-      timerMinutes.textContent = timeFormat(0);
-      timerSeconds.textContent = timeFormat(0);
-    }*/
+
   }
   updateClock();
 
 
-  /*
 
-  
-
-  function getTimeOfDay(date) {
-    const greeting = ['Доброй ночи', 'Доброе утро', 'Добрый день', 'Добрый вечер'];
-    return greeting[
-      date < 6 ? 0 : date < 12 ? 1 : date < 12 ? 2 : 3
-    ];
-  }
-
-  function getWeekDay(date) {
-    const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
-    return days[date];
-  }
-
-  document.body.append(`${getTimeOfDay(date.getHours())} 
-Сегодня: ${getWeekDay(date.getDay())}
-Текущее время: ${date.getHours()}: ${date.getMinutes()}: ${date.getSeconds()} PM
-До нового года осталось 175 дней`);
-
-  console.log(date.getHours());
-}
-*/
 }
 countTimer('31 december 2020');
