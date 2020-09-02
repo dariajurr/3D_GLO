@@ -52,26 +52,7 @@ window.addEventListener("DOMContentLoaded", function () {
     const menuItems = menu.querySelectorAll('ul>li');
 
     const handlerMenu = () => {
-      if (screen.width > 768) {
-        let count = 80;
-        if (!menu.style.transform || menu.style.transform === `translate(-100%)`) {
-          let animatemenu = setInterval(() => {
-            if (count <= 100) {
-              menu.style.transform = `translate(${count++}%)`;
-            } else {
-              clearInterval(animatemenu);
-            }
-          }, 1);
-        } else {
-          menu.style.transform = `translate(-100%)`;
-        }
-      } else {
-        if (!menu.style.transform || menu.style.transform === `translate(-100%)`) {
-          menu.style.transform = `translate(0)`;
-        } else {
-          menu.style.transform = `translate(-100%)`;
-        }
-      }
+      menu.classList.toggle('active-menu');
     };
 
     btnMenu.addEventListener('click', handlerMenu);
@@ -88,8 +69,22 @@ window.addEventListener("DOMContentLoaded", function () {
     const popupClose = document.querySelector('.popup-close');
 
     popupBtn.forEach((elem) => {
-      elem.addEventListener('click', () => {
-        popup.style.display = 'block';
+      elem.addEventListener('click', () => {        
+        if (screen.width > 768) {       
+          let count = -100;       
+          let animatemenu = setInterval(() => {
+            if (count <=  0) {
+              popup.style.display = 'block';
+              popup.style.transform  = `translateY(${count++}%)`;
+            } else {
+              clearInterval(animatemenu);
+              count = -100;
+            }
+          }, 1);     
+        } else {        
+          popup.style.display = 'block';
+        }
+        
       });
     });
 
