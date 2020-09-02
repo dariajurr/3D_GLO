@@ -70,7 +70,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     popupBtn.forEach((elem) => {
       elem.addEventListener('click', () => {        
-        if (screen.width > 768) {       
+        if (document.documentElement.clientWidth > 768) {       
           let count = -100;       
           let animatemenu = setInterval(() => {
             if (count <=  0) {
