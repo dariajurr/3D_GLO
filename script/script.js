@@ -145,9 +145,14 @@ window.addEventListener("DOMContentLoaded", function () {
     const slide = document.querySelectorAll(".portfolio-item");
     const dots = document.querySelector(".portfolio-dots");
 
-    slide.forEach(() =>
-      dots.insertAdjacentHTML("beforeend", `<li class="dot"></li>`)
-    );
+    for (let i = 0; i < slide.length; i++) {
+      const liDot = document.createElement('li');
+      liDot.classList.add('dot');
+      if (i === 0) {
+        liDot.classList.add('dot-active');
+      }
+      dots.append(liDot);
+    }
 
     const dot = document.querySelectorAll(".dot");
     let carrentSlide = 0;
