@@ -1,13 +1,14 @@
 window.addEventListener("DOMContentLoaded", function () {
   "use strict";
   //таймер
-  function countTimer(deadline) {
+  let interval;
+  const countTimer = (deadline) => {
     const timerHours = document.querySelector("#timer-hours");
     const timerMinutes = document.querySelector("#timer-minutes");
     const timerSeconds = document.querySelector("#timer-seconds");
     const timeFormat = (n) => (n < 10 ? "0" + n : n);
 
-    function getTimeRemaining() {
+    const getTimeRemaining = () => {
       const dateStop = new Date(deadline).getTime();
       const dateNow = new Date().getTime();
       const timeRemaining = (dateStop - dateNow) / 1000;
@@ -20,26 +21,25 @@ window.addEventListener("DOMContentLoaded", function () {
         minutes,
         seconds,
       };
-    }
+    };
 
-    function updateClock() {
+    const updateClock = () => {
       const timer = getTimeRemaining();
       timerHours.textContent = timeFormat(timer.hours);
       timerMinutes.textContent = timeFormat(timer.minutes);
       timerSeconds.textContent = timeFormat(timer.seconds);
 
-      if (timer.timeRemaining > 0) {
-        setTimeout(updateClock, 1000);
-      } else {
+      if (timer.timeRemaining < 0) {
         timerHours.textContent = timeFormat(0);
         timerMinutes.textContent = timeFormat(0);
         timerSeconds.textContent = timeFormat(0);
+        clearInterval(interval);
       }
-    }
-
+    };
     updateClock();
-  }
-  countTimer("3 september 2020");
+    interval = setInterval(updateClock, 1000);
+  };
+  countTimer("6 september 2020");
 
   //меню
   const toggleMenu = () => {
@@ -72,6 +72,7 @@ window.addEventListener("DOMContentLoaded", function () {
   const toglePopup = () => {
     const popup = document.querySelector(".popup");
     const popupBtn = document.querySelectorAll(".popup-btn");
+    const popupClose = document.querySelector('.popup-close');
 
     popupBtn.forEach((elem) => {
       elem.addEventListener("click", () => {
@@ -92,7 +93,7 @@ window.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    popup.addEventListener("click", () => {
+    popup.addEventListener("click", (event) => {
       let target = event.target;
       if (target.classList.contains("popup-close")) {
         popup.style.display = "none";
@@ -306,4 +307,70 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   };
   calc(100);
+
+
+  //sense-ajax-form
+  const sendForm = (...array) => {
+    const errorMessage = 'Что-то пошло не так';
+    const loadMessage = 'Загрузка...';
+    const successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+    const statusMessage = document.createElement('div');
+
+    statusMessage.style.cssText = 'font-size: 2rem; color: #fff;';
+
+    array.forEach(item => {
+      const form = document.getElementById(item);
+
+      form.addEventListener('input', (event) => {
+        if (event.target.matches('.form-phone')) {
+          event.target.value = event.target.value.replace(/[^+0-9]/, '');
+        }
+
+        if (event.target.name === 'user_name') {
+          event.target.value = event.target.value.replace(/[^а-я\s]/i, '');
+        }
+      });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        form.append(statusMessage);
+        statusMessage.textContent = loadMessage;
+        const formData = new FormData(form);
+        let body = {};
+        formData.forEach((val, key) => {
+          body[key] = val;
+        });
+
+        postData(body,
+          () => {
+            statusMessage.textContent = successMessage;
+            form.reset();
+          },
+          (error) => {
+            statusMessage.textContent = errorMessage;
+            console.log(error);
+          });
+      });
+    });
+
+    const postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+
+      request.addEventListener('readystatechange', () => {
+        if (request.readyState !== 4) {
+          return;
+        }
+        if (request.status === 200) {
+          outputData();
+        } else {
+          errorData(request.status);
+        }
+      });
+      request.open('POST', './server.php');
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.send(JSON.stringify(body));
+
+    };
+  };
+  sendForm('form1', 'form2', 'form3');
 });
