@@ -317,9 +317,12 @@ window.addEventListener("DOMContentLoaded", function () {
 
     document.body.addEventListener("input", (event) => {
       if (event.target.matches(".form-phone")) {
-        event.target.value = event.target.value.replace(/^(8|\+7)(\d{11})/, '');
+        event.target.value = event.target.value.replace(/^(8|\+7)(\d{11})/, "");
       }
-      if (event.target.name === "user_name" || event.target.name === "user_message") {
+      if (
+        event.target.name === "user_name" ||
+        event.target.name === "user_message"
+      ) {
         event.target.value = event.target.value.replace(/[^а-я\s]/i, "");
       }
     });
@@ -335,8 +338,7 @@ window.addEventListener("DOMContentLoaded", function () {
         body[key] = val;
       });
 
-      postData(
-        body,
+      postData(body).then(
         () => {
           statusMessage.textContent = successMessage;
           form.reset();
@@ -348,22 +350,24 @@ window.addEventListener("DOMContentLoaded", function () {
       );
     });
 
-    const postData = (body, outputData, errorData) => {
-      const request = new XMLHttpRequest();
+    const postData = (body) => {
+      return new Promise((resolve, reject) => {
+        const request = new XMLHttpRequest();
 
-      request.addEventListener("readystatechange", () => {
-        if (request.readyState !== 4) {
-          return;
-        }
-        if (request.status === 200) {
-          outputData();
-        } else {
-          errorData(request.status);
-        }
+        request.addEventListener("readystatechange", () => {
+          if (request.readyState !== 4) {
+            return;
+          }
+          if (request.status === 200) {
+            resolve();
+          } else {
+            reject(request.status);
+          }
+        });
+        request.open("POST", "./server.php");
+        request.setRequestHeader("Content-Type", "application/json");
+        request.send(JSON.stringify(body));
       });
-      request.open("POST", "./server.php");
-      request.setRequestHeader("Content-Type", "application/json");
-      request.send(JSON.stringify(body));
     };
   };
   sendForm();
