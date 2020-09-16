@@ -333,40 +333,27 @@ window.addEventListener("DOMContentLoaded", function () {
       form.append(statusMessage);
       statusMessage.textContent = loadMessage;
       const formData = new FormData(form);
-      let body = {};
-      formData.forEach((val, key) => {
-        body[key] = val;
-      });
 
-      postData(body).then(
-        () => {
+      postData(formData)
+        .then((response) => {
+          if (response.status !== 200) {
+            throw new Error("status network not 200");
+          }
+          console.log(response);
           statusMessage.textContent = successMessage;
           form.reset();
-        },
-        (error) => {
+        })
+        .catch((error) => {
           statusMessage.textContent = errorMessage;
           console.log(error);
-        }
-      );
+        });
     });
 
-    const postData = (body) => {
-      return new Promise((resolve, reject) => {
-        const request = new XMLHttpRequest();
-
-        request.addEventListener("readystatechange", () => {
-          if (request.readyState !== 4) {
-            return;
-          }
-          if (request.status === 200) {
-            resolve();
-          } else {
-            reject(request.status);
-          }
-        });
-        request.open("POST", "./server.php");
-        request.setRequestHeader("Content-Type", "application/json");
-        request.send(JSON.stringify(body));
+    const postData = (formData) => {
+      return fetch("./server.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: formData,
       });
     };
   };
