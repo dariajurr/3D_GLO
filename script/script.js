@@ -39,7 +39,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     updateClock();
   }
-  countTimer("3 september 2020");
+  countTimer("20 september 2020");
 
   //меню
   const toggleMenu = () => {
@@ -146,10 +146,10 @@ window.addEventListener("DOMContentLoaded", function () {
     const dots = document.querySelector(".portfolio-dots");
 
     for (let i = 0; i < slide.length; i++) {
-      const liDot = document.createElement('li');
-      liDot.classList.add('dot');
+      const liDot = document.createElement("li");
+      liDot.classList.add("dot");
       if (i === 0) {
-        liDot.classList.add('dot-active');
+        liDot.classList.add("dot-active");
       }
       dots.append(liDot);
     }
@@ -230,17 +230,17 @@ window.addEventListener("DOMContentLoaded", function () {
 
   //Наша команда
   const ourTeam = () => {
-    const command = document.querySelector('.command');
+    const command = document.querySelector(".command");
     let originalSrc;
 
-    command.addEventListener('mouseover', (event) => {
-      if (event.target.matches('.command__photo')) {
+    command.addEventListener("mouseover", (event) => {
+      if (event.target.matches(".command__photo")) {
         originalSrc = event.target.src;
         event.target.src = event.target.dataset.img;
       }
     });
-    command.addEventListener('mouseout', (event) => {
-      if (event.target.matches('.command__photo')) {
+    command.addEventListener("mouseout", (event) => {
+      if (event.target.matches(".command__photo")) {
         event.target.src = originalSrc;
       }
     });
@@ -249,18 +249,17 @@ window.addEventListener("DOMContentLoaded", function () {
 
   //калькулятор
   const calc = (price = 100) => {
-    const calcBlock = document.querySelector('.calc-block');
-    const calcType = document.querySelector('.calc-type');
-    const calcSquare = document.querySelector('.calc-square');
-    const calcCount = document.querySelector('.calc-count');
-    const calcDay = document.querySelector('.calc-day');
-    const totalValue = document.getElementById('total');
+    const calcBlock = document.querySelector(".calc-block");
+    const calcType = document.querySelector(".calc-type");
+    const calcSquare = document.querySelector(".calc-square");
+    const calcCount = document.querySelector(".calc-count");
+    const calcDay = document.querySelector(".calc-day");
+    const totalValue = document.getElementById("total");
 
     const countSum = () => {
       let total = 0;
       let calcValue = 1;
       let dayValue = 1;
-      let count = 0;
       const typeValue = calcType.options[calcType.selectedIndex].value;
       const squareValue = +calcSquare.value;
 
@@ -279,30 +278,38 @@ window.addEventListener("DOMContentLoaded", function () {
       }
 
       const changeNumbers = () => {
-        if (total > count) {
-          count += 100;
-          totalValue.textContent = count;
-        } else {
-          clearInterval(interval);
-        }
+        let count = 0;
+        let startTimestamp = 0;
+        const step = (timestamp) => {
+          if (!startTimestamp) {
+            startTimestamp = timestamp;
+          }
+          const progress = Math.min((timestamp - startTimestamp) / 1000, 1);
+          totalValue.textContent = Math.floor(
+            progress * (total - count) + count
+          );
+          if (progress < 1) {
+            window.requestAnimationFrame(step);
+          }
+        };
+        window.requestAnimationFrame(step);
       };
-      let interval = setInterval(changeNumbers, 1);
+
+      changeNumbers();
     };
 
-    calcBlock.addEventListener('change', (event) => {
+    calcBlock.addEventListener("change", (event) => {
       const target = event.target;
-      if (target.matches('select') || target.matches('input')) {
+      if (target.matches("select") || target.matches("input")) {
         countSum();
       }
-
     });
 
-    calcBlock.addEventListener('input', (event) => {
+    calcBlock.addEventListener("input", (event) => {
       let target = event.target;
-      if (!target.matches('.calc-type')) {
-        target.value = target.value.replace(/\D/g, '');
+      if (!target.matches(".calc-type")) {
+        target.value = target.value.replace(/\D/g, "");
       }
-
     });
   };
   calc(100);
