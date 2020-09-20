@@ -10,11 +10,11 @@ const sendForm = () => {
     if (event.target.matches(".form-phone")) {
       event.target.value = event.target.value.replace(/^(8|\+7)(\d{11})/, "");
     }
-    if (
-      event.target.name === "user_name" ||
-      event.target.name === "user_message"
-    ) {
-      event.target.value = event.target.value.replace(/[^а-я\s]/i, "");
+    if (event.target.name === "user_name") {
+      event.target.value = event.target.value.replace(/[^а-я\s]/gi, "");
+    }
+    if (event.target.name === "user_message") {
+      event.target.value = event.target.value.replace(/[^а-я\s,.!?\-;:]/gi, "");
     }
   });
 
@@ -22,6 +22,7 @@ const sendForm = () => {
     event.preventDefault();
     const form = event.target;
     form.append(statusMessage);
+
     statusMessage.textContent = loadMessage;
     const formData = new FormData(form);
 
@@ -38,6 +39,10 @@ const sendForm = () => {
         statusMessage.textContent = errorMessage;
         console.log(error);
       });
+
+    setTimeout(() => {
+      statusMessage.remove();
+    }, 5000);
   });
 
   const postData = (formData) => {
@@ -49,6 +54,8 @@ const sendForm = () => {
       body: formData,
     });
   };
+
+
 };
 
 export default sendForm;
