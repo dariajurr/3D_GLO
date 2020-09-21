@@ -6,7 +6,7 @@ const toglePopup = () => {
 
     if (target.matches(".popup-btn")) {
       if (document.documentElement.clientWidth > 768) {
-        console.log(1);
+
         let count = -100;
         let animatemenu = setInterval(() => {
           if (count <= 0) {
@@ -18,7 +18,7 @@ const toglePopup = () => {
           }
         }, 1);
       } else {
-        console.log(1111);
+
         popup.style.display = "block";
       }
     }
