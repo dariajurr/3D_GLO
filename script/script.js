@@ -1,13 +1,14 @@
 window.addEventListener("DOMContentLoaded", function () {
   "use strict";
   //таймер
-  function countTimer(deadline) {
+  let interval;
+  const countTimer = (deadline) => {
     const timerHours = document.querySelector("#timer-hours");
     const timerMinutes = document.querySelector("#timer-minutes");
     const timerSeconds = document.querySelector("#timer-seconds");
     const timeFormat = (n) => (n < 10 ? "0" + n : n);
 
-    function getTimeRemaining() {
+    const getTimeRemaining = () => {
       const dateStop = new Date(deadline).getTime();
       const dateNow = new Date().getTime();
       const timeRemaining = (dateStop - dateNow) / 1000;
@@ -20,26 +21,25 @@ window.addEventListener("DOMContentLoaded", function () {
         minutes,
         seconds,
       };
-    }
+    };
 
-    function updateClock() {
+    const updateClock = () => {
       const timer = getTimeRemaining();
       timerHours.textContent = timeFormat(timer.hours);
       timerMinutes.textContent = timeFormat(timer.minutes);
       timerSeconds.textContent = timeFormat(timer.seconds);
 
-      if (timer.timeRemaining > 0) {
-        setTimeout(updateClock, 1000);
-      } else {
+      if (timer.timeRemaining < 0) {
         timerHours.textContent = timeFormat(0);
         timerMinutes.textContent = timeFormat(0);
         timerSeconds.textContent = timeFormat(0);
+        clearInterval(interval);
       }
-    }
-
+    };
     updateClock();
-  }
-  countTimer("3 september 2020");
+    interval = setInterval(updateClock, 1000);
+  };
+  countTimer("6 september 2020");
 
   //меню
   const toggleMenu = () => {
@@ -146,10 +146,10 @@ window.addEventListener("DOMContentLoaded", function () {
     const dots = document.querySelector(".portfolio-dots");
 
     for (let i = 0; i < slide.length; i++) {
-      const liDot = document.createElement('li');
-      liDot.classList.add('dot');
+      const liDot = document.createElement("li");
+      liDot.classList.add("dot");
       if (i === 0) {
-        liDot.classList.add('dot-active');
+        liDot.classList.add("dot-active");
       }
       dots.append(liDot);
     }
